@@ -3,61 +3,64 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>외부 컨텐츠 모음 (Vanilla JS)</title>
+<title>외부 컨텐츠 모음 (Static HTML/CSS)</title>
 <style>
   :root{
     --bg:#0b1220;--bg2:#0f172a;--panel:#0f172acc;--ring:rgba(255,255,255,.08);
     --text:#e2e8f0;--dim:#94a3b8;--indigo:#6366f1;--violet:#a78bfa;--emerald:#10b981;
   }
   *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    color:var(--text);background:linear-gradient(#020617, #0b1220 40%, #0f172a)}
-  .ring{border:1px solid var(--ring)} .container{max-width:2000px;margin:0 auto;padding:0 32px}
-  header{position:sticky;top:0;z-index:40;backdrop-filter:blur(8px);
-    background:color-mix(in oklab, var(--bg2) 87%, transparent);border-bottom:1px solid var(--ring)}
+  body{
+    margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    color:var(--text);background:linear-gradient(#020617, #0b1220 40%, #0f172a)
+  }
+  .ring{border:1px solid var(--ring)}
+  .container{max-width:2000px;margin:0 auto;padding:0 32px}
+  header{
+    position:sticky;top:0;z-index:40;backdrop-filter:blur(8px);
+    background:color-mix(in oklab, var(--bg2) 87%, transparent);
+    border-bottom:1px solid var(--ring)
+  }
   .row{display:flex;align-items:center;gap:10px}
-  .btn{display:inline-flex;align-items:center;gap:.6rem;padding:.7rem .9rem;border-radius:12px;
-    background:transparent;border:1px solid var(--ring);color:var(--text);cursor:pointer}
+  .btn{
+    display:inline-flex;align-items:center;gap:.6rem;padding:.7rem .9rem;border-radius:12px;
+    background:transparent;border:1px solid var(--ring);color:var(--text);cursor:pointer;text-decoration:none
+  }
   .btn:hover{background:rgba(255,255,255,.06)}
-  .btn-emerald{background:color-mix(in oklab, var(--emerald) 18%, transparent);
-    border-color:color-mix(in oklab, var(--emerald) 45%, transparent)}
-  .btn-emerald:hover{background:color-mix(in oklab, var(--emerald) 28%, transparent)}
-  .search{display:none;align-items:center;gap:.6rem;border-radius:14px;padding:.6rem .9rem;border:1px solid var(--ring)}
-  .search input{background:transparent;border:0;outline:none;color:var(--text);width:18rem}
-  .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:24px 0}
-  select,input,textarea{color:var(--text)}
-  select, input[type="text"], input[type="url"], textarea{
-    background:transparent;border:1px solid var(--ring);border-radius:12px;padding:.7rem .9rem}
   .grid{
     display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
-    gap:24px;padding-bottom:120px}
-  .card{border-radius:16px;padding:20px;border:1px solid var(--ring);
-    background:rgba(255,255,255,.03);transition:.2s box-shadow,.2s transform;cursor:pointer}
+    gap:24px;padding:24px 0 120px
+  }
+  .card{
+    border-radius:16px;padding:20px;border:1px solid var(--ring);
+    background:rgba(255,255,255,.03);transition:.2s box-shadow,.2s transform;cursor:default
+  }
   .card:hover{box-shadow:0 10px 28px #0005}
-  .favicon{height:44px;width:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-    border:1px solid var(--ring);overflow:hidden}
-  .type-badge{font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  .favicon{
+    height:44px;width:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    border:1px solid var(--ring);overflow:hidden;flex:0 0 auto
+  }
+  .type-badge{
+    font-size:11px;letter-spacing:.06em;text-transform:uppercase;
     padding:.25rem .55rem;border-radius:999px;background:color-mix(in oklab, var(--indigo) 18%, transparent);
-    border:1px solid color-mix(in oklab, var(--indigo) 40%, transparent);color:#c7d2fe}
+    border:1px solid color-mix(in oklab, var(--indigo) 40%, transparent);color:#c7d2fe
+  }
   .tag{font-size:11px;padding:.25rem .55rem;border-radius:10px;border:1px solid var(--ring)}
   .muted{color:var(--dim)}
-  .empty{grid-column:1/-1;text-align:center;border:1px solid var(--ring);border-radius:16px;padding:64px 16px;
-    background:rgba(255,255,255,.03)}
-  /* modal */
+  /* modal (CSS-only with :target) */
   .modal{position:fixed;inset:0;display:none;z-index:50}
-  .modal.open{display:flex}
-  .sheet{margin:auto;width:min(1000px,95vw);max-height:90vh;background:var(--panel);
-    border:1px solid var(--ring);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px #000a}
-  .sheet .head{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--ring)}
+  .modal:target{display:flex}
+  .sheet{
+    margin:auto;width:min(1000px,95vw);max-height:90vh;background:var(--panel);
+    border:1px solid var(--ring);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px #000a
+  }
+  .sheet .head{
+    display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--ring)
+  }
   .sheet .body{padding:16px;overflow:auto;max-height:calc(90vh - 64px)}
   .overlay{flex:1;background:#0006}
-  /* editor form */
-  .form-grid{display:grid;grid-template-columns:1fr;gap:14px}
-  @media(min-width:640px){.form-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}}
-  /* toast */
-  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
-    background:#0b1322e6;border:1px solid var(--ring);padding:10px 14px;border-radius:12px;z-index:60}
-  @media(min-width:768px){ .search{display:flex} .container{padding:0 32px} }
+  a{color:inherit}
+  .title-ellipsis{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70vw}
 </style>
 </head>
 <body>
@@ -68,409 +71,329 @@
   <div class="container" style="padding:16px 0">
     <div class="row">
       <div style="font-weight:700;font-size:20px">외부 컨텐츠 모음</div>
-
-      <div class="search" style="margin-left:auto">
-        <span aria-hidden="true">🔎</span>
-        <input id="q" type="text" placeholder="검색: 제목, 태그, URL..." />
-      </div>
-
-      <button id="btn-new" class="btn btn-emerald" style="margin-left:12px">➕ 새 글</button>
     </div>
   </div>
 </header>
 
-<!-- Toolbar -->
-<div class="container toolbar">
-  <div class="row">
-    <span aria-hidden="true">⚙️</span>
-    <select id="type">
-      <option value="all">전체 타입</option>
-      <option value="article">Article</option>
-      <option value="video">Video</option>
-      <option value="github">GitHub</option>
-      <option value="doc">Docs</option>
-      <option value="tweet">Tweet</option>
-      <option value="other">Other</option>
-    </select>
-  </div>
-
-  <div class="row">
-    <span aria-hidden="true">🏷️</span>
-    <select id="tag">
-      <option value="">태그(전체)</option>
-      <!-- 동적 태그 옵션 -->
-    </select>
-    <button id="clear-tag" class="btn">태그 해제</button>
-  </div>
-
-  <div class="row">
-    <span class="muted">정렬</span>
-    <select id="sort">
-      <option value="updated">업데이트 최신순</option>
-      <option value="created">작성일 최신순</option>
-      <option value="title-asc">이름(ㄱ→ㅎ)</option>
-      <option value="title-desc">이름(ㅎ→ㄱ)</option>
-    </select>
-  </div>
-</div>
-
 <!-- List -->
 <main class="container">
-  <section id="list" class="grid">
-    <!-- 카드들이 동적으로 렌더링됩니다 -->
+  <section class="grid">
+
+    <!-- =========================
+         [예시 게시글 1] 카드
+         id는 모달의 앵커(#post-1)와 매칭
+    ==========================-->
+    <article class="card">
+      <div class="row" style="align-items:flex-start;gap:14px">
+        <div class="favicon">
+          <!-- 파비콘: 도메인만 바꾸면 자동으로 아이콘 표시 -->
+          <img src="https://www.google.com/s2/favicons?domain=web.dev&sz=64" alt="favicon" style="height:24px;width:24px" />
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="row" style="gap:10px">
+            <h3 class="title-ellipsis" title="웹 성능 체크리스트 2025" style="font-weight:700;font-size:18px">
+              웹 성능 체크리스트 2025
+            </h3>
+            <span class="type-badge">article</span>
+          </div>
+          <p class="muted" style="margin:.35rem 0 0">
+            LCP/INP/CLS 중심의 실전 체크리스트 개요.
+          </p>
+          <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">
+            <span class="tag">#web</span><span class="tag">#performance</span>
+          </div>
+          <div class="muted" style="margin-top:10px;font-size:14px">
+            작성: 2025. 09. 01. 10:00 • 업데이트: 2025. 09. 01. 10:00
+          </div>
+        </div>
+      </div>
+      <div class="row" style="gap:10px;margin-top:14px">
+        <a class="btn" href="https://web.dev/" target="_blank" rel="noopener noreferrer">🔗 열기</a>
+        <a class="btn" href="#post-1">👁️ 보기</a>
+      </div>
+    </article>
+
+    <!-- =========================
+         [예시 게시글 2] 카드
+    ==========================-->
+    <article class="card">
+      <div class="row" style="align-items:flex-start;gap:14px">
+        <div class="favicon">
+          <img src="https://www.google.com/s2/favicons?domain=react.dev&sz=64" alt="favicon" style="height:24px;width:24px" />
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="row" style="gap:10px">
+            <h3 class="title-ellipsis" title="React 19 릴리즈 노트" style="font-weight:700;font-size:18px">
+              React 19 릴리즈 노트
+            </h3>
+            <span class="type-badge">doc</span>
+          </div>
+          <p class="muted" style="margin:.35rem 0 0">
+            Actions/Form improvements 등 새로운 기능 요약.
+          </p>
+          <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">
+            <span class="tag">#react</span><span class="tag">#release</span>
+          </div>
+          <div class="muted" style="margin-top:10px;font-size:14px">
+            작성: 2025. 09. 01. 16:00 • 업데이트: 2025. 09. 01. 17:00
+          </div>
+        </div>
+      </div>
+      <div class="row" style="gap:10px;margin-top:14px">
+        <a class="btn" href="https://react.dev/" target="_blank" rel="noopener noreferrer">🔗 열기</a>
+        <a class="btn" href="#post-2">👁️ 보기</a>
+      </div>
+    </article>
+
+    <!-- =========================
+         [예시 게시글 3] 카드 (GitHub)
+    ==========================-->
+    <article class="card">
+      <div class="row" style="align-items:flex-start;gap:14px">
+        <div class="favicon">
+          <img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="favicon" style="height:24px;width:24px" />
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="row" style="gap:10px">
+            <h3 class="title-ellipsis" title="kitaekcontents 저장소" style="font-weight:700;font-size:18px">
+              kitaekcontents 저장소
+            </h3>
+            <span class="type-badge">github</span>
+          </div>
+          <p class="muted" style="margin:.35rem 0 0">
+            정적 보드 실험을 위한 데모 저장소 링크.
+          </p>
+          <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">
+            <span class="tag">#github</span><span class="tag">#demo</span>
+          </div>
+          <div class="muted" style="margin-top:10px;font-size:14px">
+            작성: 2025. 09. 02. 09:30 • 업데이트: 2025. 09. 02. 09:30
+          </div>
+        </div>
+      </div>
+      <div class="row" style="gap:10px;margin-top:14px">
+        <a class="btn" href="https://github.com/ducktaek/kitaekcontents" target="_blank" rel="noopener noreferrer">🔗 열기</a>
+        <a class="btn" href="#post-3">👁️ 보기</a>
+      </div>
+    </article>
+
+    <!-- =========================
+         (여기에 같은 패턴으로 카드를 더 붙이면 됩니다)
+    ==========================-->
+
   </section>
 </main>
 
-<!-- View Modal -->
-<div id="view-modal" class="modal" aria-hidden="true">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="view-title">
+<!-- =========================
+     [예시 1] 보기 모달 (#post-1)
+==========================-->
+<div id="post-1" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="view-title-1">
     <div class="head">
       <div class="row" style="gap:12px">
-        <div id="view-fav" class="favicon"></div>
+        <div class="favicon">
+          <img src="https://www.google.com/s2/favicons?domain=web.dev&sz=64" alt="favicon" style="height:24px;width:24px" />
+        </div>
         <div>
-          <div id="view-title" style="font-weight:700;font-size:20px;max-width:70vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
-          <div id="view-meta" class="muted" style="font-size:14px;margin-top:2px"></div>
+          <div id="view-title-1" class="title-ellipsis" title="웹 성능 체크리스트 2025" style="font-weight:700;font-size:20px">
+            웹 성능 체크리스트 2025
+          </div>
+          <div class="muted" style="font-size:14px;margin-top:2px">
+            article • 작성 2025. 09. 01. 10:00 • 업데이트 2025. 09. 01. 10:00
+          </div>
         </div>
       </div>
       <div class="row">
-        <a id="view-link" class="btn" target="_blank" rel="noopener noreferrer">링크 열기</a>
-        <button id="view-edit" class="btn">수정</button>
-        <button id="view-close" class="btn" aria-label="닫기">✖️</button>
+        <a class="btn" href="https://web.dev/" target="_blank" rel="noopener noreferrer">링크 열기</a>
+        <a class="btn" href="#">닫기</a>
       </div>
     </div>
     <div class="body">
-      <div id="view-tags" class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px"></div>
-      <div id="view-summary" style="margin-bottom:12px"></div>
+      <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <span class="tag">#web</span><span class="tag">#performance</span>
+      </div>
+      <div style="margin-bottom:12px">
+        <div style="font-weight:700;margin-bottom:4px">요약</div>
+        <div class="muted" style="white-space:pre-wrap">LCP/INP/CLS 중심의 실전 체크리스트 개요.</div>
+      </div>
       <div>
         <div style="font-weight:700;margin-bottom:6px">본문</div>
-        <div id="view-content" style="white-space:pre-wrap"></div>
+        <div style="white-space:pre-wrap">
+- 폰트 로딩 최적화
+- 이미지 lazy loading
+- preconnect 활용
+        </div>
       </div>
     </div>
   </div>
-  <div class="overlay" data-close="view"></div>
+  <a class="overlay" href="#"></a>
 </div>
 
-<!-- Editor Modal -->
-<div id="edit-modal" class="modal" aria-hidden="true">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="edit-title">
+<!-- =========================
+     [예시 2] 보기 모달 (#post-2)
+==========================-->
+<div id="post-2" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="view-title-2">
     <div class="head">
-      <div id="edit-title" style="font-weight:700;font-size:18px">새 글 추가</div>
-      <button id="edit-close" class="btn" aria-label="닫기">✖️</button>
+      <div class="row" style="gap:12px">
+        <div class="favicon">
+          <img src="https://www.google.com/s2/favicons?domain=react.dev&sz=64" alt="favicon" style="height:24px;width:24px" />
+        </div>
+        <div>
+          <div id="view-title-2" class="title-ellipsis" title="React 19 릴리즈 노트" style="font-weight:700;font-size:20px">
+            React 19 릴리즈 노트
+          </div>
+          <div class="muted" style="font-size:14px;margin-top:2px">
+            doc • 작성 2025. 09. 01. 16:00 • 업데이트 2025. 09. 01. 17:00
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <a class="btn" href="https://react.dev/" target="_blank" rel="noopener noreferrer">링크 열기</a>
+        <a class="btn" href="#">닫기</a>
+      </div>
     </div>
     <div class="body">
-      <div class="form-grid">
-        <label>제목 *<input id="f-title" type="text" placeholder="제목을 입력하세요" /></label>
-        <label>URL (선택)<input id="f-url" type="url" placeholder="https://example.com/article" /></label>
-        <div class="form-2">
-          <label>타입
-            <select id="f-type">
-              <option value="article">Article</option><option value="video">Video</option>
-              <option value="github">GitHub</option><option value="doc">Docs</option>
-              <option value="tweet">Tweet</option><option value="other">Other</option>
-            </select>
-          </label>
-          <label>태그(쉼표로 구분)
-            <input id="f-tags" type="text" placeholder="ai, research, gpu" />
-          </label>
-        </div>
-        <label>요약(선택)
-          <textarea id="f-summary" rows="4" placeholder="간단한 설명을 적어주세요"></textarea>
-        </label>
-        <label>본문(선택)
-          <textarea id="f-content" rows="10" placeholder="- 핵심 요점 1&#10;- 핵심 요점 2&#10;또는 긴 본문을 붙여넣으세요."></textarea>
-        </label>
+      <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <span class="tag">#react</span><span class="tag">#release</span>
       </div>
-      <div id="url-error" class="muted" style="color:#fca5a5;margin-top:6px;display:none">URL 형식이 올바르지 않습니다</div>
-      <div class="row" style="justify-content:flex-end;gap:10px;margin-top:14px">
-        <button id="btn-cancel" class="btn">취소</button>
-        <button id="btn-save" class="btn btn-emerald">💾 저장</button>
+      <div style="margin-bottom:12px">
+        <div style="font-weight:700;margin-bottom:4px">요약</div>
+        <div class="muted" style="white-space:pre-wrap">Actions/Form improvements 등 새로운 기능 요약.</div>
+      </div>
+      <div>
+        <div style="font-weight:700;margin-bottom:6px">본문</div>
+        <div style="white-space:pre-wrap">
+- Actions API
+- use Hook 개선
+        </div>
       </div>
     </div>
   </div>
-  <div class="overlay" data-close="edit"></div>
+  <a class="overlay" href="#"></a>
 </div>
 
-<!-- Toast -->
-<div id="toast" class="toast" style="display:none"></div>
-
-<script>
-/* ====== Types / Keys ====== */
-const KEY = 'ext_posts_v1';
-const SORT_KEY = 'ext_posts_sort';
-
-/* ====== Utils ====== */
-const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
-const parseTags = (s) => s.split(',').map(t=>t.trim()).filter(Boolean).slice(0,10);
-const isValidUrl = (u) => {
-  if(!u) return true;
-  try{ new URL(u); return true; } catch { return false; }
-};
-const favicon = (u) => {
-  if(!u) return '';
-  try{ const host = new URL(u).hostname; return `https://www.google.com/s2/favicons?domain=${host}&sz=64`; }
-  catch { return ''; }
-};
-const fmtTime = ts => new Date(ts).toLocaleString('ko-KR');
-
-/* ====== State ====== */
-let posts = loadPosts();
-let editingId = null;      // 편집 중인 게시글 id
-let viewingId = null;      // 뷰어에 열린 게시글 id
-
-/* ====== DOM ====== */
-const $ = sel => document.querySelector(sel);
-const listEl = $('#list');
-const qEl = $('#q');
-const typeEl = $('#type');
-const tagEl = $('#tag');
-const clearTagEl = $('#clear-tag');
-const sortEl = $('#sort');
-
-const viewModal = $('#view-modal');
-const viewFav = $('#view-fav');
-const viewTitle = $('#view-title');
-const viewMeta = $('#view-meta');
-const viewTags = $('#view-tags');
-const viewSummary = $('#view-summary');
-const viewContent = $('#view-content');
-const viewLink = $('#view-link');
-
-const editModal = $('#edit-modal');
-const fTitle = $('#f-title');
-const fUrl = $('#f-url');
-const fType = $('#f-type');
-const fTags = $('#f-tags');
-const fSummary = $('#f-summary');
-const fContent = $('#f-content');
-const urlError = $('#url-error');
-
-const toastEl = $('#toast');
-
-/* ====== Init ====== */
-function loadPosts(){
-  try{
-    const raw = localStorage.getItem(KEY);
-    const arr = raw ? JSON.parse(raw) : [];
-    return Array.isArray(arr) ? arr : [];
-  }catch{return []}
-}
-function savePosts(){ localStorage.setItem(KEY, JSON.stringify(posts)); }
-function loadSort(){
-  const v = localStorage.getItem(SORT_KEY);
-  if(v) sortEl.value = v;
-}
-loadSort();
-renderAll();
-
-/* ====== Derived / Render ====== */
-function deriveTags(allPosts){
-  const set = new Set();
-  allPosts.forEach(p => (p.tags||[]).forEach(t => set.add(t)));
-  return Array.from(set).sort((a,b)=>a.localeCompare(b,'ko'));
-}
-function currentFilters(){
-  const query = (qEl.value||'').trim().toLowerCase();
-  const typ = typeEl.value;
-  const tag = (tagEl.value||'').trim().toLowerCase();
-  const sortBy = sortEl.value;
-  return {query,typ,tag,sortBy};
-}
-function filterAndSort(all){
-  const {query,typ,tag,sortBy} = currentFilters();
-  let list = all
-    .filter(p => typ==='all' ? true : p.type===typ)
-    .filter(p => tag ? p.tags.some(x=>x.toLowerCase()===tag) : true)
-    .filter(p => {
-      if(!query) return true;
-      const blob = `${p.title} ${p.summary||''} ${(p.tags||[]).join(' ')} ${p.url||''} ${p.content||''}`.toLowerCase();
-      return blob.includes(query);
-    });
-
-  if(sortBy === 'updated') list.sort((a,b)=>b.updatedAt - a.updatedAt);
-  else if(sortBy === 'created') list.sort((a,b)=>b.createdAt - a.createdAt);
-  else if(sortBy === 'title-asc') list.sort((a,b)=>a.title.localeCompare(b.title,'ko',{sensitivity:'base'}));
-  else if(sortBy === 'title-desc') list.sort((a,b)=>b.title.localeCompare(a.title,'ko',{sensitivity:'base'}));
-
-  return list;
-}
-function renderTagOptions(){
-  const tags = deriveTags(posts);
-  tagEl.innerHTML = '<option value="">태그(전체)</option>' + tags.map(t=>`<option value="${t}">${t}</option>`).join('');
-}
-function renderList(){
-  const data = filterAndSort(posts);
-  if(data.length===0){
-    listEl.innerHTML = `
-      <div class="empty">
-        <div class="favicon" style="height:64px;width:64px;margin:0 auto"><span class="muted" style="font-size:24px">🔎</span></div>
-        <h3 style="margin:12px 0 4px;font-size:20px">표시할 컨텐츠가 없습니다</h3>
-        <p class="muted">우측 상단의 "새 글" 버튼으로 컨텐츠를 추가하세요.</p>
-      </div>`;
-    return;
-  }
-  listEl.innerHTML = data.map(p => cardHtml(p)).join('');
-  // 카드 이벤트 바인딩
-  data.forEach(p=>{
-    const root = document.querySelector(`[data-id="${p.id}"]`);
-    root.addEventListener('click',(e)=>{
-      const target = e.target;
-      if(target.closest('button') || target.closest('a')) return;
-      openView(p.id);
-    });
-    root.querySelector('.btn-open')?.addEventListener('click', (e)=>{ e.stopPropagation(); if(p.url) window.open(p.url,'_blank','noopener,noreferrer'); });
-    root.querySelector('.btn-edit').addEventListener('click', (e)=>{ e.stopPropagation(); openEditor(p.id); });
-    root.querySelector('.btn-del').addEventListener('click', (e)=>{ e.stopPropagation(); onDelete(p.id); });
-  });
-}
-function renderAll(){
-  renderTagOptions();
-  renderList();
-}
-
-/* ====== Card template ====== */
-function cardHtml(p){
-  const fav = favicon(p.url);
-  const tagHtml = (p.tags||[]).map(t=>`<span class="tag">#${t}</span>`).join('');
-  const summary = p.summary ? `<p style="margin:.35rem 0 0" class="muted" >${esc(p.summary)}</p>` : '';
-  const openBtn = p.url ? `<button class="btn btn-open">🔗 열기</button>` : '';
-  return `
-  <article class="card" data-id="${p.id}">
-    <div class="row" style="align-items:flex-start;gap:14px">
-      <div class="favicon">${fav ? `<img src="${fav}" alt="favicon" style="height:24px;width:24px">` : '🔗'}</div>
-      <div style="flex:1;min-width:0">
-        <div class="row" style="gap:10px">
-          <h3 title="${esc(p.title)}" style="font-weight:700;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.title)}</h3>
-          <span class="type-badge">${p.type}</span>
+<!-- =========================
+     [예시 3] 보기 모달 (#post-3)
+==========================-->
+<div id="post-3" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="view-title-3">
+    <div class="head">
+      <div class="row" style="gap:12px">
+        <div class="favicon">
+          <img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="favicon" style="height:24px;width:24px" />
         </div>
-        ${summary}
-        ${(p.tags&&p.tags.length)? `<div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">${tagHtml}</div>`:''}
-        <div class="muted" style="margin-top:10px;font-size:14px">
-          작성: ${fmtTime(p.createdAt)} • 업데이트: ${fmtTime(p.updatedAt)}
+        <div>
+          <div id="view-title-3" class="title-ellipsis" title="kitaekcontents 저장소" style="font-weight:700;font-size:20px">
+            kitaekcontents 저장소
+          </div>
+          <div class="muted" style="font-size:14px;margin-top:2px">
+            github • 작성 2025. 09. 02. 09:30 • 업데이트 2025. 09. 02. 09:30
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <a class="btn" href="https://github.com/ducktaek/kitaekcontents" target="_blank" rel="noopener noreferrer">링크 열기</a>
+        <a class="btn" href="#">닫기</a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <span class="tag">#github</span><span class="tag">#demo</span>
+      </div>
+      <div style="margin-bottom:12px">
+        <div style="font-weight:700;margin-bottom:4px">요약</div>
+        <div class="muted" style="white-space:pre-wrap">정적 보드 실험을 위한 데모 저장소 링크.</div>
+      </div>
+      <div>
+        <div style="font-weight:700;margin-bottom:6px">본문</div>
+        <div style="white-space:pre-wrap">
+- 저장소 구조 정리
+- GitHub Pages로 정적 호스팅
         </div>
       </div>
     </div>
-    <div class="row" style="gap:10px;margin-top:14px">
-      ${openBtn}
-      <button class="btn btn-edit">✏️ 수정</button>
-      <button class="btn btn-del">🗑️ 삭제</button>
+  </div>
+  <a class="overlay" href="#"></a>
+</div>
+
+<!-- =========================
+     👇👇 추가용 템플릿 (복사/붙여넣기)
+     1) 카드(리스트) 블록
+     2) 모달(상세보기) 블록
+     ⚠️ id와 href 앵커(#post-N) 번호를 같은 값으로 바꿔주세요.
+==========================
+
+<!-- [카드 템플릿] -->
+<article class="card">
+  <div class="row" style="align-items:flex-start;gap:14px">
+    <div class="favicon">
+      <img src="https://www.google.com/s2/favicons?domain=YOUR-DOMAIN.com&sz=64" alt="favicon" style="height:24px;width:24px" />
     </div>
-  </article>`;
-}
-function esc(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+    <div style="flex:1;min-width:0">
+      <div class="row" style="gap:10px">
+        <h3 class="title-ellipsis" title="여기에 제목" style="font-weight:700;font-size:18px">여기에 제목</h3>
+        <span class="type-badge">article</span> <!-- article | video | github | doc | tweet | other -->
+      </div>
+      <p class="muted" style="margin:.35rem 0 0">여기에 요약 한 줄</p>
+      <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">
+        <span class="tag">#tag1</span><span class="tag">#tag2</span>
+      </div>
+      <div class="muted" style="margin-top:10px;font-size:14px">
+        작성: YYYY. MM. DD. HH:MM • 업데이트: YYYY. MM. DD. HH:MM
+      </div>
+    </div>
+  </div>
+  <div class="row" style="gap:10px;margin-top:14px">
+    <a class="btn" href="https://YOUR-LINK" target="_blank" rel="noopener noreferrer">🔗 열기</a>
+    <a class="btn" href="#post-N">👁️ 보기</a>
+  </div>
+</article>
 
-/* ====== View Modal ====== */
-function openView(id){
-  const p = posts.find(x=>x.id===id); if(!p) return;
-  viewingId = id;
-  const fav = favicon(p.url);
-  viewFav.innerHTML = fav? `<img src="${fav}" alt="favicon" style="height:24px;width:24px">` : '🔗';
-  viewTitle.textContent = p.title;
-  viewMeta.textContent = `${p.type} • 작성 ${fmtTime(p.createdAt)} • 업데이트 ${fmtTime(p.updatedAt)}`;
-  viewTags.innerHTML = (p.tags||[]).map(t=>`<span class="tag">#${t}</span>`).join('');
-  viewSummary.innerHTML = p.summary? `<div style="font-weight:700;margin-bottom:4px">요약</div><div class="muted" style="white-space:pre-wrap">${esc(p.summary)}</div>` : '';
-  viewContent.textContent = (p.content||'').trim() || '등록된 본문이 없습니다.';
-  if(p.url){ viewLink.style.display='inline-flex'; viewLink.href=p.url; } else { viewLink.style.display='none'; }
-  viewModal.classList.add('open'); viewModal.setAttribute('aria-hidden','false');
-}
-function closeView(){ viewingId=null; viewModal.classList.remove('open'); viewModal.setAttribute('aria-hidden','true'); }
-$('#view-close').addEventListener('click', closeView);
-$('#view-edit').addEventListener('click', ()=>{ if(viewingId){ openEditor(viewingId); closeView(); } });
-viewModal.addEventListener('click', (e)=>{ if(e.target.dataset.close==='view') closeView(); });
-window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') { if(viewModal.classList.contains('open')) closeView(); if(editModal.classList.contains('open')) closeEditor(); } });
+<!-- [모달 템플릿] -->
+<div id="post-N" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="view-title-N">
+    <div class="head">
+      <div class="row" style="gap:12px">
+        <div class="favicon">
+          <img src="https://www.google.com/s2/favicons?domain=YOUR-DOMAIN.com&sz=64" alt="favicon" style="height:24px;width:24px" />
+        </div>
+        <div>
+          <div id="view-title-N" class="title-ellipsis" title="여기에 제목" style="font-weight:700;font-size:20px">
+            여기에 제목
+          </div>
+          <div class="muted" style="font-size:14px;margin-top:2px">
+            article • 작성 YYYY. MM. DD. HH:MM • 업데이트 YYYY. MM. DD. HH:MM
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <a class="btn" href="https://YOUR-LINK" target="_blank" rel="noopener noreferrer">링크 열기</a>
+        <a class="btn" href="#">닫기</a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <span class="tag">#tag1</span><span class="tag">#tag2</span>
+      </div>
+      <div style="margin-bottom:12px">
+        <div style="font-weight:700;margin-bottom:4px">요약</div>
+        <div class="muted" style="white-space:pre-wrap">요약 본문을 여기에</div>
+      </div>
+      <div>
+        <div style="font-weight:700;margin-bottom:6px">본문</div>
+        <div style="white-space:pre-wrap">
+여기에 본문을 여러 줄로 작성할 수 있습니다.
+- 포인트 1
+- 포인트 2
+        </div>
+      </div>
+    </div>
+  </div>
+  <a class="overlay" href="#"></a>
+</div>
 
-/* ====== Editor Modal (Create/Update) ====== */
-function openEditor(id=null){
-  editingId = id;
-  $('#edit-title').textContent = id ? '글 수정' : '새 글 추가';
-  if(id){
-    const p = posts.find(x=>x.id===id); if(!p) return;
-    fTitle.value = p.title;
-    fUrl.value = p.url || '';
-    fType.value = p.type;
-    fTags.value = (p.tags||[]).join(', ');
-    fSummary.value = p.summary || '';
-    fContent.value = p.content || '';
-  }else{
-    fTitle.value = ''; fUrl.value=''; fType.value='article'; fTags.value=''; fSummary.value=''; fContent.value='';
-  }
-  urlError.style.display = 'none';
-  editModal.classList.add('open'); editModal.setAttribute('aria-hidden','false');
-}
-function closeEditor(){ editingId=null; editModal.classList.remove('open'); editModal.setAttribute('aria-hidden','true'); }
-$('#btn-new').addEventListener('click', ()=>openEditor());
-$('#btn-cancel').addEventListener('click', closeEditor);
-$('#edit-close').addEventListener('click', closeEditor);
-editModal.addEventListener('click', (e)=>{ if(e.target.dataset.close==='edit') closeEditor(); });
+========================== -->
 
-$('#btn-save').addEventListener('click', ()=>{
-  const title = fTitle.value.trim();
-  const url = fUrl.value.trim();
-  const type = fType.value;
-  const tags = parseTags(fTags.value);
-  const summary = fSummary.value.trim();
-  const content = fContent.value.trim();
-
-  if(!title){ toast('제목은 필수입니다'); return; }
-  if(!isValidUrl(url)){ urlError.style.display='block'; return; }
-  urlError.style.display='none';
-
-  const now = Date.now();
-  if(editingId){
-    posts = posts.map(p => p.id===editingId ? {
-      ...p, title, url: url||undefined, type, tags, summary: summary||undefined, content: content||undefined, updatedAt: now
-    } : p);
-    toast('수정되었습니다');
-  }else{
-    const p = { id: uid(), title, url: url||undefined, type, tags,
-      summary: summary||undefined, content: content||undefined, createdAt: now, updatedAt: now };
-    posts = [p, ...posts];
-    toast('추가되었습니다');
-  }
-  savePosts();
-  renderAll();
-  closeEditor();
-});
-
-/* ====== Delete ====== */
-function onDelete(id){
-  if(!confirm('정말 삭제할까요?')) return;
-  posts = posts.filter(p=>p.id!==id);
-  savePosts();
-  renderAll();
-  toast('삭제되었습니다');
-}
-
-/* ====== Events: filters, search, sort ====== */
-[qEl,typeEl,tagEl,sortEl].forEach(el=>{
-  el.addEventListener('input', ()=>{
-    if(el===sortEl) localStorage.setItem(SORT_KEY, sortEl.value);
-    renderList();
-  });
-});
-clearTagEl.addEventListener('click', ()=>{ tagEl.value=''; renderList(); });
-
-/* ====== Toast ====== */
-let toastTimer=null;
-function toast(msg){
-  toastEl.textContent = msg;
-  toastEl.style.display = 'block';
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>{ toastEl.style.display='none'; }, 1600);
-}
-
-/* ====== Seed (optional): 첫 방문에 예시 2개 ====== */
-if(posts.length===0){
-  const now = Date.now();
-  posts = [
-    { id: uid(), title:'웹 성능 체크리스트 2025', url:'https://web.dev/',
-      type:'article', tags:['web','performance'], summary:'LCP/INP/CLS 중심의 실전 체크리스트.',
-      content:'- 폰트 로딩 최적화\n- 이미지 lazy loading\n- preconnect 활용', createdAt:now-86400000, updatedAt:now-86400000 },
-    { id: uid(), title:'React 19 릴리즈 노트', url:'https://react.dev/',
-      type:'doc', tags:['react','release'], summary:'Actions/Form improvements 등 새로운 기능 요약.',
-      content:'- Actions API\n- use Hook 개선', createdAt:now-43200000, updatedAt:now-3600000 }
-  ];
-  savePosts(); renderAll();
-}
-</script>
 </body>
 </html>
