@@ -1,189 +1,221 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>외부 컨텐츠 모음 (Static 2 posts)</title>
-<style>
-  :root{
-    --bg:#0b1220;--bg2:#0f172a;--panel:#0f172acc;--ring:rgba(255,255,255,.08);
-    --text:#e2e8f0;--dim:#94a3b8;--indigo:#6366f1;--emerald:#10b981;
-  }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    color:var(--text);background:linear-gradient(#020617, #0b1220 40%, #0f172a)}
-  .ring{border:1px solid var(--ring)}
-  .container{max-width:2000px;margin:0 auto;padding:0 32px}
-  header{position:sticky;top:0;z-index:40;backdrop-filter:blur(8px);
-    background:color-mix(in oklab, var(--bg2) 87%, transparent);border-bottom:1px solid var(--ring)}
-  .row{display:flex;align-items:center;gap:10px}
-  .btn{display:inline-flex;align-items:center;gap:.6rem;padding:.7rem .9rem;border-radius:12px;
-    background:transparent;border:1px solid var(--ring);color:var(--text);cursor:pointer;text-decoration:none}
-  .btn:hover{background:rgba(255,255,255,.06)}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:24px;padding:24px 0 120px}
-  .card{border-radius:16px;padding:20px;border:1px solid var(--ring);background:rgba(255,255,255,.03);transition:.2s box-shadow,.2s transform}
-  .card:hover{box-shadow:0 10px 28px #0005}
-  .favicon{height:44px;width:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;border:1px solid var(--ring);overflow:hidden;flex:0 0 auto}
-  .type-badge{font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .55rem;border-radius:999px;background:color-mix(in oklab, var(--indigo) 18%, transparent);border:1px solid color-mix(in oklab, var(--indigo) 40%, transparent);color:#c7d2fe}
-  .tag{font-size:11px;padding:.25rem .55rem;border-radius:10px;border:1px solid var(--ring)}
-  .muted{color:var(--dim)}
-  /* modal via :target (CSS-only) */
-  .modal{position:fixed;inset:0;display:none;z-index:50}
-  .modal:target{display:flex}
-  .sheet{margin:auto;width:min(1000px,95vw);max-height:90vh;background:var(--panel);border:1px solid var(--ring);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px #000a}
-  .sheet .head{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--ring)}
-  .sheet .body{padding:16px;overflow:auto;max-height:calc(90vh - 64px)}
-  .overlay{flex:1;background:#0006}
-  .title-ellipsis{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70vw}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>외부 컨텐츠 모음 (정적 글 리스트)</title>
+  <meta name="description" content="외부 컨텐츠를 요약/정리한 정적 글 모음입니다. 카드/JS 없이 검색 친화적 구조로 제공." />
+  <link rel="canonical" href="https://example.com/" />
+
+  <!-- Open Graph(선택): 소셜 미리보기 -->
+  <meta property="og:title" content="외부 컨텐츠 모음 (정적 글 리스트)" />
+  <meta property="og:description" content="외부 컨텐츠를 요약/정리한 정적 글 모음입니다." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root{
+      --bg:#0b1220;--bg2:#0f172a;--panel:#0f172acc;--ring:rgba(255,255,255,.08);
+      --text:#e2e8f0;--dim:#94a3b8;--indigo:#6366f1;--emerald:#10b981;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--text);background:linear-gradient(#020617, #0b1220 40%, #0f172a)
+    }
+    a{color:inherit}
+    .container{max-width:900px;margin:0 auto;padding:24px 20px}
+    header.site{position:sticky;top:0;z-index:10;backdrop-filter:blur(8px);
+      background:color-mix(in oklab, var(--bg2) 87%, transparent);border-bottom:1px solid var(--ring)}
+    header.site .inner{max-width:900px;margin:0 auto;padding:16px 20px}
+    h1{font-size:22px;margin:0}
+    nav.toc{margin:14px 0 6px}
+    nav.toc a{display:inline-block;margin:4px 10px 0 0;padding:6px 10px;border:1px solid var(--ring);border-radius:999px;text-decoration:none}
+    main{padding-top:8px}
+    article{
+      border:1px solid var(--ring);border-radius:16px;background:rgba(255,255,255,.03);
+      padding:18px;margin:16px 0;
+    }
+    article header h2{font-size:20px;margin:0}
+    .meta{color:var(--dim);font-size:14px;margin:6px 0 10px}
+    .tags{margin:10px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+    .tag{font-size:11px;padding:.25rem .55rem;border-radius:999px;border:1px solid var(--ring)}
+    .ext{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .65rem;border:1px solid var(--ring);
+      border-radius:10px;text-decoration:none;margin-top:8px}
+    section.summary{margin:12px 0}
+    section.content{margin:14px 0}
+    footer.article-ft{margin-top:10px;border-top:1px dashed var(--ring);padding-top:10px;color:var(--dim);font-size:13px}
+    .favicon{height:18px;width:18px;border-radius:4px;vertical-align:middle;margin-right:6px}
+  </style>
 </head>
 <body>
-<div class="bg fixed" style="position:fixed;inset:0;z-index:-1;background:linear-gradient(to bottom,#020617,#0b1220 45%,#0f172a)"></div>
+<div style="position:fixed;inset:0;z-index:-1;background:linear-gradient(to bottom,#020617,#0b1220 45%,#0f172a)"></div>
 
-<!-- Header -->
-<header>
-  <div class="container" style="padding:16px 0">
-    <div class="row">
-      <div style="font-weight:700;font-size:20px">외부 컨텐츠 모음</div>
-    </div>
+<header class="site" role="banner">
+  <div class="inner">
+    <h1>외부 컨텐츠 모음</h1>
+    <p style="margin:6px 0 0;color:var(--dim)">정적 HTML만으로 구성된 요약/본문 아카이브</p>
+
+    <!-- 간단 목차(문서 내부 앵커) -->
+    <nav class="toc" aria-label="글 목차">
+      <a href="#post-web-perf-2025">웹 성능 체크리스트 2025</a>
+      <a href="#post-react-19">React 19 릴리즈 노트</a>
+    </nav>
   </div>
 </header>
 
-<!-- List (예시 2개) -->
-<main class="container">
-  <section class="grid">
+<main class="container" role="main">
 
-    <!-- [예시 1] 카드 -->
-    <article class="card">
-      <div class="row" style="align-items:flex-start;gap:14px">
-        <div class="favicon">
-          <img src="https://www.google.com/s2/favicons?domain=web.dev&sz=64" alt="favicon" style="height:24px;width:24px" />
-        </div>
-        <div style="flex:1;min-width:0">
-          <div class="row" style="gap:10px">
-            <h3 class="title-ellipsis" title="웹 성능 체크리스트 2025" style="font-weight:700;font-size:18px">웹 성능 체크리스트 2025</h3>
-            <span class="type-badge">article</span>
-          </div>
-          <p class="muted" style="margin:.35rem 0 0">LCP/INP/CLS 중심의 실전 체크리스트 개요.</p>
-          <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">
-            <span class="tag">#web</span><span class="tag">#performance</span>
-          </div>
-          <div class="muted" style="margin-top:10px;font-size:14px">
-            작성: 2025. 09. 01. 10:00 • 업데이트: 2025. 09. 01. 10:00
-          </div>
-        </div>
+  <!-- =========================
+       예시 글 1 (Microdata: Article)
+  ========================== -->
+  <article id="post-web-perf-2025" itemscope itemtype="https://schema.org/Article">
+    <header>
+      <h2 itemprop="headline">웹 성능 체크리스트 2025</h2>
+      <div class="meta">
+        <time itemprop="datePublished" datetime="2025-09-01T10:00:00+09:00">작성: 2025-09-01 10:00</time>
+        ·
+        <time itemprop="dateModified" datetime="2025-09-01T10:00:00+09:00">업데이트: 2025-09-01 10:00</time>
       </div>
-      <div class="row" style="gap:10px;margin-top:14px">
-        <a class="btn" href="https://web.dev/" target="_blank" rel="noopener noreferrer">🔗 열기</a>
-        <a class="btn" href="#post-1">👁️ 보기</a>
-      </div>
-    </article>
+      <a class="ext" itemprop="mainEntityOfPage" href="https://web.dev/" target="_blank" rel="noopener nofollow">
+        <img class="favicon" src="https://www.google.com/s2/favicons?domain=web.dev&sz=64" alt="web.dev 파비콘" />
+        원문 열기
+      </a>
+      <meta itemprop="author" content="기택" />
+      <meta itemprop="inLanguage" content="ko" />
+    </header>
 
-    <!-- [예시 2] 카드 -->
-    <article class="card">
-      <div class="row" style="align-items:flex-start;gap:14px">
-        <div class="favicon">
-          <img src="https://www.google.com/s2/favicons?domain=react.dev&sz=64" alt="favicon" style="height:24px;width:24px" />
-        </div>
-        <div style="flex:1;min-width:0">
-          <div class="row" style="gap:10px">
-            <h3 class="title-ellipsis" title="React 19 릴리즈 노트" style="font-weight:700;font-size:18px">React 19 릴리즈 노트</h3>
-            <span class="type-badge">doc</span>
-          </div>
-          <p class="muted" style="margin:.35rem 0 0">Actions/Form improvements 등 새로운 기능 요약.</p>
-          <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">
-            <span class="tag">#react</span><span class="tag">#release</span>
-          </div>
-          <div class="muted" style="margin-top:10px;font-size:14px">
-            작성: 2025. 09. 01. 16:00 • 업데이트: 2025. 09. 01. 17:00
-          </div>
-        </div>
-      </div>
-      <div class="row" style="gap:10px;margin-top:14px">
-        <a class="btn" href="https://react.dev/" target="_blank" rel="noopener noreferrer">🔗 열기</a>
-        <a class="btn" href="#post-2">👁️ 보기</a>
-      </div>
-    </article>
+    <section class="summary" itemprop="description">
+      LCP/INP/CLS 중심의 실전 체크리스트 개요. 핵심 성능 지표 정의와 측정/개선 팁을 한눈에 정리.
+    </section>
 
-  </section>
+    <section class="content" itemprop="articleBody">
+      <h3>핵심 요점</h3>
+      <ul>
+        <li><strong>LCP 최적화:</strong> 폰트 디스플레이 전략 조정, hero 이미지 프리로드</li>
+        <li><strong>INP 대응:</strong> 메인 스레드 작업 분할, 오버렌더링 방지</li>
+        <li><strong>CLS 감소:</strong> 이미지/광고 슬롯에 고정 크기 지정, 폰트 스왑 전략</li>
+        <li><strong>네트워크 힌트:</strong> <code>preconnect</code>, <code>dns-prefetch</code>, <code>preload</code> 적절 사용</li>
+      </ul>
+
+      <h3>체크리스트</h3>
+      <ol>
+        <li>폰트: 서브셋/가변폰트 고려, FOIT 방지</li>
+        <li>이미지: 형식(AVIF/WEBP), 크기/아트디렉션, lazy-loading</li>
+        <li>스크립트: 불필요한 번들 제거, 지연/지연실행</li>
+        <li>서버: 캐시/압축/HTTP/3, CDN 엣지</li>
+      </ol>
+    </section>
+
+    <div class="tags" aria-label="태그">
+      <a class="tag" href="#post-web-perf-2025" rel="tag">#web</a>
+      <a class="tag" href="#post-web-perf-2025" rel="tag">#performance</a>
+    </div>
+
+    <footer class="article-ft">
+      출처: <a href="https://web.dev/" target="_blank" rel="noopener nofollow">web.dev</a>
+    </footer>
+  </article>
+
+  <!-- =========================
+       예시 글 2 (Microdata: Article)
+  ========================== -->
+  <article id="post-react-19" itemscope itemtype="https://schema.org/Article">
+    <header>
+      <h2 itemprop="headline">React 19 릴리즈 노트</h2>
+      <div class="meta">
+        <time itemprop="datePublished" datetime="2025-09-01T16:00:00+09:00">작성: 2025-09-01 16:00</time>
+        ·
+        <time itemprop="dateModified" datetime="2025-09-01T17:00:00+09:00">업데이트: 2025-09-01 17:00</time>
+      </div>
+      <a class="ext" itemprop="mainEntityOfPage" href="https://react.dev/" target="_blank" rel="noopener nofollow">
+        <img class="favicon" src="https://www.google.com/s2/favicons?domain=react.dev&sz=64" alt="react.dev 파비콘" />
+        원문 열기
+      </a>
+      <meta itemprop="author" content="기택" />
+      <meta itemprop="inLanguage" content="ko" />
+    </header>
+
+    <section class="summary" itemprop="description">
+      Actions/Form 개선, 새로운 훅 및 생태계 정리. 마이그레이션 가이드의 핵심 포인트를 요약.
+    </section>
+
+    <section class="content" itemprop="articleBody">
+      <h3>주요 변화</h3>
+      <ul>
+        <li>서버 액션 안정화 및 폼 핸들링 간소화</li>
+        <li>리소스/이벤트 관련 신규 훅 추가</li>
+        <li>DevTools 개선으로 성능 병목 탐지 용이</li>
+      </ul>
+
+      <h3>업그레이드 체크</h3>
+      <ol>
+        <li>기존 폼 처리 로직 → Actions 기반으로 전환 가능성 검토</li>
+        <li>서버/클라이언트 경계 명확화 및 번들 사이즈 재점검</li>
+        <li>타사 라이브러리 호환성 확인</li>
+      </ol>
+    </section>
+
+    <div class="tags" aria-label="태그">
+      <a class="tag" href="#post-react-19" rel="tag">#react</a>
+      <a class="tag" href="#post-react-19" rel="tag">#release</a>
+    </div>
+
+    <footer class="article-ft">
+      출처: <a href="https://react.dev/" target="_blank" rel="noopener nofollow">react.dev</a>
+    </footer>
+  </article>
+
+  <!-- =========================
+       📌 복붙용 "초간단 글 템플릿"
+       - id/앵커(#post-your-slug)만 바꾸고, 내용 채우면 끝
+       - 스키마: https://schema.org/Article
+  ========================== -->
+  <!--
+  <article id="post-your-slug" itemscope itemtype="https://schema.org/Article">
+    <header>
+      <h2 itemprop="headline">여기에 글 제목</h2>
+      <div class="meta">
+        <time itemprop="datePublished" datetime="YYYY-MM-DDThh:mm:ss+09:00">작성: YYYY-MM-DD hh:mm</time>
+        ·
+        <time itemprop="dateModified" datetime="YYYY-MM-DDThh:mm:ss+09:00">업데이트: YYYY-MM-DD hh:mm</time>
+      </div>
+      <a class="ext" itemprop="mainEntityOfPage" href="https://YOUR-LINK" target="_blank" rel="noopener nofollow">
+        <img class="favicon" src="https://www.google.com/s2/favicons?domain=YOUR-DOMAIN.com&sz=64" alt="파비콘" />
+        원문 열기
+      </a>
+      <meta itemprop="author" content="작성자명" />
+      <meta itemprop="inLanguage" content="ko" />
+    </header>
+
+    <section class="summary" itemprop="description">
+      여기에 한 줄 요약(또는 2~3문장).
+    </section>
+
+    <section class="content" itemprop="articleBody">
+      <h3>소제목 1</h3>
+      <p>문단 내용…</p>
+      <ul>
+        <li>포인트 A</li>
+        <li>포인트 B</li>
+      </ul>
+
+      <h3>소제목 2</h3>
+      <p>문단 내용…</p>
+      <pre><code>필요시 코드 블록</code></pre>
+    </section>
+
+    <div class="tags" aria-label="태그">
+      <a class="tag" href="#post-your-slug" rel="tag">#tag1</a>
+      <a class="tag" href="#post-your-slug" rel="tag">#tag2</a>
+    </div>
+
+    <footer class="article-ft">
+      출처: <a href="https://YOUR-LINK" target="_blank" rel="noopener nofollow">원문 링크</a>
+    </footer>
+  </article>
+  -->
 </main>
-
-<!-- [예시 1] 모달 -->
-<div id="post-1" class="modal" aria-hidden="true">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="view-title-1">
-    <div class="head">
-      <div class="row" style="gap:12px">
-        <div class="favicon">
-          <img src="https://www.google.com/s2/favicons?domain=web.dev&sz=64" alt="favicon" style="height:24px;width:24px" />
-        </div>
-        <div>
-          <div id="view-title-1" class="title-ellipsis" title="웹 성능 체크리스트 2025" style="font-weight:700;font-size:20px">웹 성능 체크리스트 2025</div>
-          <div class="muted" style="font-size:14px;margin-top:2px">article • 작성 2025. 09. 01. 10:00 • 업데이트 2025. 09. 01. 10:00</div>
-        </div>
-      </div>
-      <div class="row">
-        <a class="btn" href="https://web.dev/" target="_blank" rel="noopener noreferrer">링크 열기</a>
-        <a class="btn" href="#">닫기</a>
-      </div>
-    </div>
-    <div class="body">
-      <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">
-        <span class="tag">#web</span><span class="tag">#performance</span>
-      </div>
-      <div style="margin-bottom:12px">
-        <div style="font-weight:700;margin-bottom:4px">요약</div>
-        <div class="muted" style="white-space:pre-wrap">LCP/INP/CLS 중심의 실전 체크리스트 개요.</div>
-      </div>
-      <div>
-        <div style="font-weight:700;margin-bottom:6px">본문</div>
-        <div style="white-space:pre-wrap">
-- 폰트 로딩 최적화
-- 이미지 lazy loading
-- preconnect 활용
-        </div>
-      </div>
-    </div>
-  </div>
-  <a class="overlay" href="#"></a>
-</div>
-
-<!-- [예시 2] 모달 -->
-<div id="post-2" class="modal" aria-hidden="true">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="view-title-2">
-    <div class="head">
-      <div class="row" style="gap:12px">
-        <div class="favicon">
-          <img src="https://www.google.com/s2/favicons?domain=react.dev&sz=64" alt="favicon" style="height:24px;width:24px" />
-        </div>
-        <div>
-          <div id="view-title-2" class="title-ellipsis" title="React 19 릴리즈 노트" style="font-weight:700;font-size:20px">React 19 릴리즈 노트</div>
-          <div class="muted" style="font-size:14px;margin-top:2px">doc • 작성 2025. 09. 01. 16:00 • 업데이트 2025. 09. 01. 17:00</div>
-        </div>
-      </div>
-      <div class="row">
-        <a class="btn" href="https://react.dev/" target="_blank" rel="noopener noreferrer">링크 열기</a>
-        <a class="btn" href="#">닫기</a>
-      </div>
-    </div>
-    <div class="body">
-      <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">
-        <span class="tag">#react</span><span class="tag">#release</span>
-      </div>
-      <div style="margin-bottom:12px">
-        <div style="font-weight:700;margin-bottom:4px">요약</div>
-        <div class="muted" style="white-space:pre-wrap">Actions/Form improvements 등 새로운 기능 요약.</div>
-      </div>
-      <div>
-        <div style="font-weight:700;margin-bottom:6px">본문</div>
-        <div style="white-space:pre-wrap">
-- Actions API
-- use Hook 개선
-        </div>
-      </div>
-    </div>
-  </div>
-  <a class="overlay" href="#"></a>
-</div>
 
 </body>
 </html>
