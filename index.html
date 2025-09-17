@@ -3,63 +3,37 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>외부 컨텐츠 모음 (Static HTML/CSS)</title>
+<title>외부 컨텐츠 모음 (Static 2 posts)</title>
 <style>
   :root{
     --bg:#0b1220;--bg2:#0f172a;--panel:#0f172acc;--ring:rgba(255,255,255,.08);
-    --text:#e2e8f0;--dim:#94a3b8;--indigo:#6366f1;--violet:#a78bfa;--emerald:#10b981;
+    --text:#e2e8f0;--dim:#94a3b8;--indigo:#6366f1;--emerald:#10b981;
   }
   *{box-sizing:border-box} html,body{height:100%}
-  body{
-    margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    color:var(--text);background:linear-gradient(#020617, #0b1220 40%, #0f172a)
-  }
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    color:var(--text);background:linear-gradient(#020617, #0b1220 40%, #0f172a)}
   .ring{border:1px solid var(--ring)}
   .container{max-width:2000px;margin:0 auto;padding:0 32px}
-  header{
-    position:sticky;top:0;z-index:40;backdrop-filter:blur(8px);
-    background:color-mix(in oklab, var(--bg2) 87%, transparent);
-    border-bottom:1px solid var(--ring)
-  }
+  header{position:sticky;top:0;z-index:40;backdrop-filter:blur(8px);
+    background:color-mix(in oklab, var(--bg2) 87%, transparent);border-bottom:1px solid var(--ring)}
   .row{display:flex;align-items:center;gap:10px}
-  .btn{
-    display:inline-flex;align-items:center;gap:.6rem;padding:.7rem .9rem;border-radius:12px;
-    background:transparent;border:1px solid var(--ring);color:var(--text);cursor:pointer;text-decoration:none
-  }
+  .btn{display:inline-flex;align-items:center;gap:.6rem;padding:.7rem .9rem;border-radius:12px;
+    background:transparent;border:1px solid var(--ring);color:var(--text);cursor:pointer;text-decoration:none}
   .btn:hover{background:rgba(255,255,255,.06)}
-  .grid{
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
-    gap:24px;padding:24px 0 120px
-  }
-  .card{
-    border-radius:16px;padding:20px;border:1px solid var(--ring);
-    background:rgba(255,255,255,.03);transition:.2s box-shadow,.2s transform;cursor:default
-  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:24px;padding:24px 0 120px}
+  .card{border-radius:16px;padding:20px;border:1px solid var(--ring);background:rgba(255,255,255,.03);transition:.2s box-shadow,.2s transform}
   .card:hover{box-shadow:0 10px 28px #0005}
-  .favicon{
-    height:44px;width:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-    border:1px solid var(--ring);overflow:hidden;flex:0 0 auto
-  }
-  .type-badge{
-    font-size:11px;letter-spacing:.06em;text-transform:uppercase;
-    padding:.25rem .55rem;border-radius:999px;background:color-mix(in oklab, var(--indigo) 18%, transparent);
-    border:1px solid color-mix(in oklab, var(--indigo) 40%, transparent);color:#c7d2fe
-  }
+  .favicon{height:44px;width:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;border:1px solid var(--ring);overflow:hidden;flex:0 0 auto}
+  .type-badge{font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .55rem;border-radius:999px;background:color-mix(in oklab, var(--indigo) 18%, transparent);border:1px solid color-mix(in oklab, var(--indigo) 40%, transparent);color:#c7d2fe}
   .tag{font-size:11px;padding:.25rem .55rem;border-radius:10px;border:1px solid var(--ring)}
   .muted{color:var(--dim)}
-  /* modal (CSS-only with :target) */
+  /* modal via :target (CSS-only) */
   .modal{position:fixed;inset:0;display:none;z-index:50}
   .modal:target{display:flex}
-  .sheet{
-    margin:auto;width:min(1000px,95vw);max-height:90vh;background:var(--panel);
-    border:1px solid var(--ring);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px #000a
-  }
-  .sheet .head{
-    display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--ring)
-  }
+  .sheet{margin:auto;width:min(1000px,95vw);max-height:90vh;background:var(--panel);border:1px solid var(--ring);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px #000a}
+  .sheet .head{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--ring)}
   .sheet .body{padding:16px;overflow:auto;max-height:calc(90vh - 64px)}
   .overlay{flex:1;background:#0006}
-  a{color:inherit}
   .title-ellipsis{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70vw}
 </style>
 </head>
@@ -75,30 +49,22 @@
   </div>
 </header>
 
-<!-- List -->
+<!-- List (예시 2개) -->
 <main class="container">
   <section class="grid">
 
-    <!-- =========================
-         [예시 게시글 1] 카드
-         id는 모달의 앵커(#post-1)와 매칭
-    ==========================-->
+    <!-- [예시 1] 카드 -->
     <article class="card">
       <div class="row" style="align-items:flex-start;gap:14px">
         <div class="favicon">
-          <!-- 파비콘: 도메인만 바꾸면 자동으로 아이콘 표시 -->
           <img src="https://www.google.com/s2/favicons?domain=web.dev&sz=64" alt="favicon" style="height:24px;width:24px" />
         </div>
         <div style="flex:1;min-width:0">
           <div class="row" style="gap:10px">
-            <h3 class="title-ellipsis" title="웹 성능 체크리스트 2025" style="font-weight:700;font-size:18px">
-              웹 성능 체크리스트 2025
-            </h3>
+            <h3 class="title-ellipsis" title="웹 성능 체크리스트 2025" style="font-weight:700;font-size:18px">웹 성능 체크리스트 2025</h3>
             <span class="type-badge">article</span>
           </div>
-          <p class="muted" style="margin:.35rem 0 0">
-            LCP/INP/CLS 중심의 실전 체크리스트 개요.
-          </p>
+          <p class="muted" style="margin:.35rem 0 0">LCP/INP/CLS 중심의 실전 체크리스트 개요.</p>
           <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">
             <span class="tag">#web</span><span class="tag">#performance</span>
           </div>
@@ -113,9 +79,7 @@
       </div>
     </article>
 
-    <!-- =========================
-         [예시 게시글 2] 카드
-    ==========================-->
+    <!-- [예시 2] 카드 -->
     <article class="card">
       <div class="row" style="align-items:flex-start;gap:14px">
         <div class="favicon">
@@ -123,14 +87,10 @@
         </div>
         <div style="flex:1;min-width:0">
           <div class="row" style="gap:10px">
-            <h3 class="title-ellipsis" title="React 19 릴리즈 노트" style="font-weight:700;font-size:18px">
-              React 19 릴리즈 노트
-            </h3>
+            <h3 class="title-ellipsis" title="React 19 릴리즈 노트" style="font-weight:700;font-size:18px">React 19 릴리즈 노트</h3>
             <span class="type-badge">doc</span>
           </div>
-          <p class="muted" style="margin:.35rem 0 0">
-            Actions/Form improvements 등 새로운 기능 요약.
-          </p>
+          <p class="muted" style="margin:.35rem 0 0">Actions/Form improvements 등 새로운 기능 요약.</p>
           <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">
             <span class="tag">#react</span><span class="tag">#release</span>
           </div>
@@ -145,48 +105,10 @@
       </div>
     </article>
 
-    <!-- =========================
-         [예시 게시글 3] 카드 (GitHub)
-    ==========================-->
-    <article class="card">
-      <div class="row" style="align-items:flex-start;gap:14px">
-        <div class="favicon">
-          <img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="favicon" style="height:24px;width:24px" />
-        </div>
-        <div style="flex:1;min-width:0">
-          <div class="row" style="gap:10px">
-            <h3 class="title-ellipsis" title="kitaekcontents 저장소" style="font-weight:700;font-size:18px">
-              kitaekcontents 저장소
-            </h3>
-            <span class="type-badge">github</span>
-          </div>
-          <p class="muted" style="margin:.35rem 0 0">
-            정적 보드 실험을 위한 데모 저장소 링크.
-          </p>
-          <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">
-            <span class="tag">#github</span><span class="tag">#demo</span>
-          </div>
-          <div class="muted" style="margin-top:10px;font-size:14px">
-            작성: 2025. 09. 02. 09:30 • 업데이트: 2025. 09. 02. 09:30
-          </div>
-        </div>
-      </div>
-      <div class="row" style="gap:10px;margin-top:14px">
-        <a class="btn" href="https://github.com/ducktaek/kitaekcontents" target="_blank" rel="noopener noreferrer">🔗 열기</a>
-        <a class="btn" href="#post-3">👁️ 보기</a>
-      </div>
-    </article>
-
-    <!-- =========================
-         (여기에 같은 패턴으로 카드를 더 붙이면 됩니다)
-    ==========================-->
-
   </section>
 </main>
 
-<!-- =========================
-     [예시 1] 보기 모달 (#post-1)
-==========================-->
+<!-- [예시 1] 모달 -->
 <div id="post-1" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="view-title-1">
     <div class="head">
@@ -195,12 +117,8 @@
           <img src="https://www.google.com/s2/favicons?domain=web.dev&sz=64" alt="favicon" style="height:24px;width:24px" />
         </div>
         <div>
-          <div id="view-title-1" class="title-ellipsis" title="웹 성능 체크리스트 2025" style="font-weight:700;font-size:20px">
-            웹 성능 체크리스트 2025
-          </div>
-          <div class="muted" style="font-size:14px;margin-top:2px">
-            article • 작성 2025. 09. 01. 10:00 • 업데이트 2025. 09. 01. 10:00
-          </div>
+          <div id="view-title-1" class="title-ellipsis" title="웹 성능 체크리스트 2025" style="font-weight:700;font-size:20px">웹 성능 체크리스트 2025</div>
+          <div class="muted" style="font-size:14px;margin-top:2px">article • 작성 2025. 09. 01. 10:00 • 업데이트 2025. 09. 01. 10:00</div>
         </div>
       </div>
       <div class="row">
@@ -229,9 +147,7 @@
   <a class="overlay" href="#"></a>
 </div>
 
-<!-- =========================
-     [예시 2] 보기 모달 (#post-2)
-==========================-->
+<!-- [예시 2] 모달 -->
 <div id="post-2" class="modal" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="view-title-2">
     <div class="head">
@@ -240,12 +156,8 @@
           <img src="https://www.google.com/s2/favicons?domain=react.dev&sz=64" alt="favicon" style="height:24px;width:24px" />
         </div>
         <div>
-          <div id="view-title-2" class="title-ellipsis" title="React 19 릴리즈 노트" style="font-weight:700;font-size:20px">
-            React 19 릴리즈 노트
-          </div>
-          <div class="muted" style="font-size:14px;margin-top:2px">
-            doc • 작성 2025. 09. 01. 16:00 • 업데이트 2025. 09. 01. 17:00
-          </div>
+          <div id="view-title-2" class="title-ellipsis" title="React 19 릴리즈 노트" style="font-weight:700;font-size:20px">React 19 릴리즈 노트</div>
+          <div class="muted" style="font-size:14px;margin-top:2px">doc • 작성 2025. 09. 01. 16:00 • 업데이트 2025. 09. 01. 17:00</div>
         </div>
       </div>
       <div class="row">
@@ -272,128 +184,6 @@
   </div>
   <a class="overlay" href="#"></a>
 </div>
-
-<!-- =========================
-     [예시 3] 보기 모달 (#post-3)
-==========================-->
-<div id="post-3" class="modal" aria-hidden="true">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="view-title-3">
-    <div class="head">
-      <div class="row" style="gap:12px">
-        <div class="favicon">
-          <img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="favicon" style="height:24px;width:24px" />
-        </div>
-        <div>
-          <div id="view-title-3" class="title-ellipsis" title="kitaekcontents 저장소" style="font-weight:700;font-size:20px">
-            kitaekcontents 저장소
-          </div>
-          <div class="muted" style="font-size:14px;margin-top:2px">
-            github • 작성 2025. 09. 02. 09:30 • 업데이트 2025. 09. 02. 09:30
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <a class="btn" href="https://github.com/ducktaek/kitaekcontents" target="_blank" rel="noopener noreferrer">링크 열기</a>
-        <a class="btn" href="#">닫기</a>
-      </div>
-    </div>
-    <div class="body">
-      <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">
-        <span class="tag">#github</span><span class="tag">#demo</span>
-      </div>
-      <div style="margin-bottom:12px">
-        <div style="font-weight:700;margin-bottom:4px">요약</div>
-        <div class="muted" style="white-space:pre-wrap">정적 보드 실험을 위한 데모 저장소 링크.</div>
-      </div>
-      <div>
-        <div style="font-weight:700;margin-bottom:6px">본문</div>
-        <div style="white-space:pre-wrap">
-- 저장소 구조 정리
-- GitHub Pages로 정적 호스팅
-        </div>
-      </div>
-    </div>
-  </div>
-  <a class="overlay" href="#"></a>
-</div>
-
-<!-- =========================
-     👇👇 추가용 템플릿 (복사/붙여넣기)
-     1) 카드(리스트) 블록
-     2) 모달(상세보기) 블록
-     ⚠️ id와 href 앵커(#post-N) 번호를 같은 값으로 바꿔주세요.
-==========================
-
-<!-- [카드 템플릿] -->
-<article class="card">
-  <div class="row" style="align-items:flex-start;gap:14px">
-    <div class="favicon">
-      <img src="https://www.google.com/s2/favicons?domain=YOUR-DOMAIN.com&sz=64" alt="favicon" style="height:24px;width:24px" />
-    </div>
-    <div style="flex:1;min-width:0">
-      <div class="row" style="gap:10px">
-        <h3 class="title-ellipsis" title="여기에 제목" style="font-weight:700;font-size:18px">여기에 제목</h3>
-        <span class="type-badge">article</span> <!-- article | video | github | doc | tweet | other -->
-      </div>
-      <p class="muted" style="margin:.35rem 0 0">여기에 요약 한 줄</p>
-      <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px">
-        <span class="tag">#tag1</span><span class="tag">#tag2</span>
-      </div>
-      <div class="muted" style="margin-top:10px;font-size:14px">
-        작성: YYYY. MM. DD. HH:MM • 업데이트: YYYY. MM. DD. HH:MM
-      </div>
-    </div>
-  </div>
-  <div class="row" style="gap:10px;margin-top:14px">
-    <a class="btn" href="https://YOUR-LINK" target="_blank" rel="noopener noreferrer">🔗 열기</a>
-    <a class="btn" href="#post-N">👁️ 보기</a>
-  </div>
-</article>
-
-<!-- [모달 템플릿] -->
-<div id="post-N" class="modal" aria-hidden="true">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="view-title-N">
-    <div class="head">
-      <div class="row" style="gap:12px">
-        <div class="favicon">
-          <img src="https://www.google.com/s2/favicons?domain=YOUR-DOMAIN.com&sz=64" alt="favicon" style="height:24px;width:24px" />
-        </div>
-        <div>
-          <div id="view-title-N" class="title-ellipsis" title="여기에 제목" style="font-weight:700;font-size:20px">
-            여기에 제목
-          </div>
-          <div class="muted" style="font-size:14px;margin-top:2px">
-            article • 작성 YYYY. MM. DD. HH:MM • 업데이트 YYYY. MM. DD. HH:MM
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <a class="btn" href="https://YOUR-LINK" target="_blank" rel="noopener noreferrer">링크 열기</a>
-        <a class="btn" href="#">닫기</a>
-      </div>
-    </div>
-    <div class="body">
-      <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">
-        <span class="tag">#tag1</span><span class="tag">#tag2</span>
-      </div>
-      <div style="margin-bottom:12px">
-        <div style="font-weight:700;margin-bottom:4px">요약</div>
-        <div class="muted" style="white-space:pre-wrap">요약 본문을 여기에</div>
-      </div>
-      <div>
-        <div style="font-weight:700;margin-bottom:6px">본문</div>
-        <div style="white-space:pre-wrap">
-여기에 본문을 여러 줄로 작성할 수 있습니다.
-- 포인트 1
-- 포인트 2
-        </div>
-      </div>
-    </div>
-  </div>
-  <a class="overlay" href="#"></a>
-</div>
-
-========================== -->
 
 </body>
 </html>
