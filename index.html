@@ -314,146 +314,154 @@
   -->
     </main>
 
-    <!-- CSV 파싱 & 리뷰를 <article>로 렌더 -->
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-    <script>
-        (function () {
-            // GitHub Pages(프로젝트 경로) 대응
-            const BASE = location.pathname.startsWith('/kitaekcontents') ? '/kitaekcontents' : '';
-            const CSV_URL = `${BASE}/ori_is_quackquack_kitaek_AtoE_full_reviews.csv`;
-            const mount = document.getElementById('auto-reviews-mount');
+  <!-- CSV 파싱 & 리뷰를 <article>로 렌더 -->
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script>
+(function () {
+  // 실행 가드: 중복 삽입/중복 실행 방지
+  if (window.__KITAEK_REVIEWS_MOUNTED__) return;
+  window.__KITAEK_REVIEWS_MOUNTED__ = true;
 
-            // 제품명 → 보기 좋은 타이틀
-            const PRODUCT_TITLE = {
-                "ori_is_quackquack_kitaek_A": "A 컴퓨터",
-                "ori_is_quackquack_kitaek_B": "B 컴퓨터",
-                "ori_is_quackquack_kitaek_C": "C 컴퓨터",
-                "ori_is_quackquack_kitaek_D": "D 컴퓨터",
-                "ori_is_quackquack_kitaek_E": "E 컴퓨터",
-            };
+  // GitHub Pages(프로젝트 경로) 대응
+  const BASE = location.pathname.startsWith('/kitaekcontents') ? '/kitaekcontents' : '';
+  // ✅ CSV 경로 수정(저장한 위치로 맞춰주세요)
+  const CSV_URL = `${BASE}/assets/reviews/ori_is_quackquack_kitaek_AtoE_full_reviews.csv`;
+  const mount = document.getElementById('auto-reviews-mount');
 
-            const now = new Date();
-            const pad = n => String(n).padStart(2, '0');
-            const iso = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) +
-                'T' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds()) + '+09:00';
-            const human = `작성: ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
-            const FAVICON_DOMAIN = 'example.com'; // 필요 시 변경
+  // 제품명 → 보기 좋은 타이틀
+  const PRODUCT_TITLE = {
+    "ori_is_quackquack_kitaek_A": "A 컴퓨터",
+    "ori_is_quackquack_kitaek_B": "B 컴퓨터",
+    "ori_is_quackquack_kitaek_C": "C 컴퓨터",
+    "ori_is_quackquack_kitaek_D": "D 컴퓨터",
+    "ori_is_quackquack_kitaek_E": "E 컴퓨터",
+  };
 
-            // XSS-safe
-            function escapeHtml(s) {
-                return String(s)
-                    .replaceAll('&', '&amp;')
-                    .replaceAll('<', '&lt;')
-                    .replaceAll('>', '&gt;')
-                    .replaceAll('"', '&quot;')
-                    .replaceAll("'", "&#39;");
-            }
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const iso = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) +
+              'T' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds()) + '+09:00';
+  const human = `작성: ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  const FAVICON_DOMAIN = 'example.com'; // 필요 시 변경
 
-            // 네가 준 article 구조로 하나 생성
-            function createArticle({ productKey, text, idxPerProduct }) {
-                const id = `review-${productKey}-${idxPerProduct}`;
-                const title = `${PRODUCT_TITLE[productKey] || productKey} 사용자 후기 #${idxPerProduct}`;
-                const tagHash = '#' + (PRODUCT_TITLE[productKey] || productKey);
+  // XSS-safe
+  function escapeHtml(s) {
+    return String(s)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", "&#39;");
+  }
 
-                const article = document.createElement('article');
-                article.id = id;
-                article.setAttribute('itemscope', '');
-                article.setAttribute('itemtype', 'https://schema.org/Article');
+  // 네가 준 article 구조로 하나 생성
+  function createArticle({ productKey, text, idxPerProduct }) {
+    const id = `review-${productKey}-${idxPerProduct}`;
+    const title = `${PRODUCT_TITLE[productKey] || productKey} 사용자 후기 #${idxPerProduct}`;
+    const tagHash = '#' + (PRODUCT_TITLE[productKey] || productKey);
 
-                const header = document.createElement('header');
-                const h2 = document.createElement('h2');
-                h2.setAttribute('itemprop', 'headline');
-                h2.textContent = title;
+    const article = document.createElement('article');
+    article.id = id;
+    article.setAttribute('itemscope', '');
+    article.setAttribute('itemtype', 'https://schema.org/Article');
 
-                const meta = document.createElement('div');
-                meta.className = 'meta';
-                meta.innerHTML = `
+    const header = document.createElement('header');
+    const h2 = document.createElement('h2');
+    h2.setAttribute('itemprop', 'headline');
+    h2.textContent = title;
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.innerHTML = `
       <time itemprop="datePublished" datetime="${iso}">${human}</time>
       ·
       <time itemprop="dateModified" datetime="${iso}">업데이트: ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}</time>
     `;
 
-                const ext = document.createElement('a');
-                ext.className = 'ext';
-                ext.setAttribute('itemprop', 'mainEntityOfPage');
-                ext.href = `${BASE}/`; // 제품 상세 링크로 바꿀 수 있음
-                ext.target = '_blank';
-                ext.rel = 'noopener nofollow';
-                ext.innerHTML = `
+    const ext = document.createElement('a');
+    ext.className = 'ext';
+    ext.setAttribute('itemprop', 'mainEntityOfPage');
+    ext.href = `${BASE}/`; // 제품 상세 링크로 바꿀 수 있음
+    ext.target = '_blank';
+    ext.rel = 'noopener nofollow';
+    ext.innerHTML = `
       <img class="favicon" src="https://www.google.com/s2/favicons?domain=${FAVICON_DOMAIN}&sz=64" alt="파비콘" />
       원문 열기
     `;
 
-                const author = document.createElement('meta');
-                author.setAttribute('itemprop', 'author'); author.content = '기택';
-                const lang = document.createElement('meta');
-                lang.setAttribute('itemprop', 'inLanguage'); lang.content = 'ko';
+    const author = document.createElement('meta');
+    author.setAttribute('itemprop', 'author'); author.content = '기택';
+    const lang = document.createElement('meta');
+    lang.setAttribute('itemprop', 'inLanguage'); lang.content = 'ko';
 
-                header.appendChild(h2);
-                header.appendChild(meta);
-                header.appendChild(ext);
-                header.appendChild(author);
-                header.appendChild(lang);
+    header.append(h2, meta, ext, author, lang);
 
-                const summary = document.createElement('section');
-                summary.className = 'summary';
-                summary.setAttribute('itemprop', 'description');
-                summary.textContent = text.length > 90 ? text.slice(0, 90) + '…' : text;
+    const summary = document.createElement('section');
+    summary.className = 'summary';
+    summary.setAttribute('itemprop', 'description');
+    summary.textContent = text.length > 90 ? text.slice(0, 90) + '…' : text;
 
-                const content = document.createElement('section');
-                content.className = 'content';
-                content.setAttribute('itemprop', 'articleBody');
-                content.innerHTML = `<p>${escapeHtml(text)}</p>`;
+    const content = document.createElement('section');
+    content.className = 'content';
+    content.setAttribute('itemprop', 'articleBody');
+    content.innerHTML = `<p>${escapeHtml(text)}</p>`;
 
-                const tags = document.createElement('div');
-                tags.className = 'tags';
-                tags.setAttribute('aria-label', '태그');
-                const tag = document.createElement('a');
-                tag.className = 'tag';
-                tag.href = `#${id}`;
-                tag.setAttribute('rel', 'tag');
-                tag.textContent = tagHash;
-                tags.appendChild(tag);
+    const tags = document.createElement('div');
+    tags.className = 'tags';
+    tags.setAttribute('aria-label', '태그');
+    const tag = document.createElement('a');
+    tag.className = 'tag';
+    tag.href = `#${id}`;
+    tag.setAttribute('rel', 'tag');
+    tag.textContent = tagHash;
+    tags.appendChild(tag);
 
-                const ft = document.createElement('footer');
-                ft.className = 'article-ft';
-                ft.innerHTML = `출처: <a href="${BASE}/" target="_blank" rel="noopener nofollow">사용자 후기</a>`;
+    const ft = document.createElement('footer');
+    ft.className = 'article-ft';
+    ft.innerHTML = `출처: <a href="${BASE}/" target="_blank" rel="noopener nofollow">사용자 후기</a>`;
 
-                article.appendChild(header);
-                article.appendChild(summary);
-                article.appendChild(content);
-                article.appendChild(tags);
-                article.appendChild(ft);
+    article.append(header, summary, content, tags, ft);
+    return article;
+  }
 
-                return article;
-            }
+  // 공백/개행 정규화
+  const norm = s => String(s || '').trim().replace(/\s+/g, ' ');
 
-            // CSV 파싱 → <article> 렌더
-            Papa.parse(CSV_URL, {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-                complete: ({ data }) => {
-                    const frag = document.createDocumentFragment();
-                    const counters = {}; // 제품별 인덱스
+  // CSV 파싱 → <article> 렌더 (중복 제거 + 로그)
+  Papa.parse(CSV_URL, {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: ({ data }) => {
+      // (제품명, 리뷰) 쌍 기준 중복 제거
+      const seen = new Set();
+      const deduped = [];
+      for (const row of data) {
+        const key = norm(row['제품명']);
+        const text = norm(row['리뷰']);
+        if (!key || !text) continue;
+        const sig = `${key}|||${text}`;
+        if (seen.has(sig)) continue;
+        seen.add(sig);
+        deduped.push({ key, text });
+      }
 
-                    data.forEach(row => {
-                        const productKey = row['제품명'];
-                        const text = row['리뷰'];
-                        if (!productKey || !text) return;
+      // 디버그 로그: 총 행/유니크 행 수
+      console.log('[reviews] rows:', data.length, 'unique:', deduped.length);
 
-                        counters[productKey] = (counters[productKey] || 0) + 1;
-                        const idx = counters[productKey];
+      const frag = document.createDocumentFragment();
+      const counters = {}; // 제품별 인덱스
+      deduped.forEach(({ key, text }) => {
+        counters[key] = (counters[key] || 0) + 1;
+        frag.appendChild(createArticle({ productKey: key, text, idxPerProduct: counters[key] }));
+      });
 
-                        frag.appendChild(createArticle({ productKey, text, idxPerProduct: idx }));
-                    });
-
-                    mount.replaceChildren(frag);
-                },
-                error: err => console.error('CSV 파싱 오류:', err)
-            });
-        })();
-    </script>
+      mount.replaceChildren(frag);
+    },
+    error: err => console.error('CSV 파싱 오류:', err)
+  });
+})();
+</script>
 
 </body>
 
